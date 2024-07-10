@@ -114,6 +114,12 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Image.asset(
+              'assets/images/fortune_cookie.jpg',
+              width: 200,
+              height: 200,
+              fit: BoxFit.cover,
+            ),
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
