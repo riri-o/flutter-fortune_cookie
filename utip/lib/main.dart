@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -29,6 +30,23 @@ class UTip extends StatefulWidget {
 }
 
 class _UTipState extends State<UTip> {
+  int _personCount = 1;
+
+  //Methods
+  void increment() {
+    setState(() {
+      _personCount = _personCount + 1;
+    });
+  }
+
+  void decrement() {
+    setState(() {
+      if (_personCount > 0) {
+        _personCount--;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     print(context.widget);
@@ -63,6 +81,56 @@ class _UTipState extends State<UTip> {
                   ),
                 ],
               )),
+          //Form
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    border:
+                        Border.all(color: theme.colorScheme.primary, width: 2)),
+                child: Column(
+                  children: [
+                    TextField(
+                      decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.attach_money),
+                          labelText: 'Bill Aomount'),
+                      //数字のキーボードが出るはずだが出てこない
+                      keyboardType: TextInputType.number,
+                      onChanged: (String value) {
+                        print("Value:$value");
+                      },
+                    ),
+                    //Split Bill area
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'split',
+                          style: theme.textTheme.titleMedium,
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                                color: theme.colorScheme.primary,
+                                onPressed: decrement,
+                                icon: const Icon(Icons.remove)),
+                            Text(
+                              "$_personCount",
+                              style: theme.textTheme.titleMedium,
+                            ),
+                            IconButton(
+                                color: theme.colorScheme.primary,
+                                onPressed: increment,
+                                icon: const Icon(Icons.add))
+                          ],
+                        )
+                      ],
+                    )
+                  ],
+                )),
+          )
         ],
       ),
     );
