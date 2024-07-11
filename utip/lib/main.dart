@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:utip/widgets/bill_amount_field.dart';
 import 'package:utip/widgets/person_counter.dart';
 import 'package:utip/widgets/tip_slider.dart';
 
@@ -33,8 +34,16 @@ class UTip extends StatefulWidget {
 
 class _UTipState extends State<UTip> {
   int _personCount = 1;
-
   double _tipPercentage = 0.0;
+  double _billTotal = 0.0;
+
+  double totalPerPerson() {
+    return ((_billTotal * _tipPercentage) + (_billTotal)) / _personCount;
+  }
+
+  double totalTip() {
+    return (_billTotal * _tipPercentage);
+  }
 
   //Methods
   void increment() {
@@ -45,7 +54,7 @@ class _UTipState extends State<UTip> {
 
   void decrement() {
     setState(() {
-      if (_personCount > 0) {
+      if (_personCount > 1) {
         _personCount--;
       }
     });
@@ -53,8 +62,10 @@ class _UTipState extends State<UTip> {
 
   @override
   Widget build(BuildContext context) {
-    print(context.widget);
+    //print(context.widget);
     var theme = Theme.of(context);
+    double total = totalPerPerson();
+    double totalT = totalTip();
     //Add style
     final style = theme.textTheme.titleMedium!.copyWith(
         color: theme.colorScheme.onPrimary, fontWeight: FontWeight.bold);
@@ -78,7 +89,7 @@ class _UTipState extends State<UTip> {
                     style: style,
                   ),
                   Text(
-                    "\$23.89",
+                    "$total",
                     style: style.copyWith(
                         color: theme.colorScheme.onPrimary,
                         fontSize: theme.textTheme.displaySmall?.fontSize),
@@ -95,18 +106,27 @@ class _UTipState extends State<UTip> {
                         Border.all(color: theme.colorScheme.primary, width: 2)),
                 child: Column(
                   children: [
-                    TextField(
-                      decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.attach_money),
-                          labelText: 'Bill Aomount'),
-                      //数字のキーボードが出るはずだが出てこない
-                      keyboardType: TextInputType.number,
-                      onChanged: (String value) {
-                        print("Value:$value");
+                    BillAmountField(
+                      billAmount: _billTotal.toString(),
+                      onChanged: (value) {
+                        setState(() {
+                          _billTotal = double.parse(value);
+                        });
                       },
                     ),
+                    // TextField(
+                    //   decoration: const InputDecoration(
+                    //       border: OutlineInputBorder(),
+                    //       prefixIcon: Icon(Icons.attach_money),
+                    //       labelText: 'Bill Aomount'),
+                    //   //数字のキーボードが出るはずだが出てこない
+                    //   keyboardType: TextInputType.number,
+                    //   onChanged: (String value) {
+                    //     print("Value:$value");
+                    //   },
+                    // ),
                     //Split Bill area
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -131,7 +151,7 @@ class _UTipState extends State<UTip> {
                           style: theme.textTheme.titleMedium,
                         ),
                         Text(
-                          "\$20",
+                          "$totalT",
                           style: theme.textTheme.titleMedium,
                         )
                       ],
